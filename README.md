@@ -1,7 +1,7 @@
 # SpaceyShooter
 
 Asteroids(ish) Replica
-https://michaelkipp.github.io/Geosploders/
+https://michaelkipp.github.io/SpaceyShooter/
 
 ## Built With
 
