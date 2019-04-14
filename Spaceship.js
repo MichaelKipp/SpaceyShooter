@@ -1,19 +1,25 @@
 class Spaceship {
-    constructor (location) {
-        this.location = location
+    constructor () {
+        this.location = createVector(width/2, height/2)
         this.velocity = createVector(0, 0)
         this.acceleration = createVector(0, 0)
-        this.direction
+        this.direction = createVector(1, 0)
     }
 
     update() {
       this.velocity.add(this.acceleration)
       this.location.add(this.velocity)
+
     }
 
     display() {
-        fill(255)
-        rect(this.location.x, this.location.y, 5, 5)
+      fill(255)
+      stroke(255)
+      push()
+      translate(this.location.x, this.location.y)
+      rotate(this.direction.heading())
+      triangle(6,0,-2,4,-2,-4)
+      pop()
     }
 
     accelerate(vector) {

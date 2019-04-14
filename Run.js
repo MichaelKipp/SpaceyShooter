@@ -1,5 +1,5 @@
 /*  Author: Michael Kipp
-    Project: Asteroids Replica
+    Project: Asteroids(ish) Replica
     Date: 04/13/2019
 */
 
@@ -7,11 +7,13 @@ var ship
 
 function setup() {
     createCanvas(windowWidth, windowHeight)
+    // rectMode(CENTER)
     width = windowWidth
     height = windowHeight
 
     smooth()
-    ship = new Spaceship(createVector(200, 200))
+    angleMode(RADIANS)
+    ship = new Spaceship()
   }
 
   function draw() {
@@ -24,19 +26,11 @@ function setup() {
   }
 
   function checkAcceleration() {
-    if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { ship.accelerate(createVector(-1, 0)) }
-    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { ship.accelerate(createVector(1, 0)) }
-    if (keyIsDown(UP_ARROW) || keyIsDown(87)) { ship.accelerate(createVector(0, -1)) }
-    if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { ship.accelerate(createVector(0, 1)) }
-  }
-
-  function keyPressed() {
-      console.log(keyCode)
-      switch(keyCode) {
-          case 32:
-              ship.shoot()//w
-              break
-      }
+    if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { ship.direction.rotate(-.15) }
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { ship.direction.rotate(.15) }
+    if (keyIsDown(UP_ARROW) || keyIsDown(87)) { ship.accelerate(p5.Vector.mult(ship.direction, .05)) }
+    if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { ship.accelerate(p5.Vector.mult(ship.direction, -.05)) }
+    if (keyIsDown(32)) { ship.shoot() }
   }
 
   function windowResized() { resizeCanvas(windowWidth, windowHeight) }
