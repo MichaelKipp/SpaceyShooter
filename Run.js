@@ -13,6 +13,7 @@ function setup() {
 
     smooth()
     angleMode(RADIANS)
+    colorMode(RGB, 255)
     ship = new Spaceship()
   }
 

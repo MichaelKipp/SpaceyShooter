@@ -3,7 +3,6 @@ class Projectile {
     this.location = location
     this.velocity = direction
     this.color = color(random(50, 240), random(50, 240), random(50, 240))
-    console.log(this.location)
   }
 
   update() {
