@@ -1,8 +1,8 @@
 class Asteroid extends Projectile {
-  constructor(location, direction) {
+  constructor(location, direction, size) {
     super(location, direction)
     // this.color = color(random(10, 240), random(10, 240), random(10, 240))
-    this.size = 30
+    this.size = size
     this.edges = random(9, 13)
     this.poly = []
     for (var i = 0; i < this.edges; i++) {
@@ -45,6 +45,8 @@ class Asteroid extends Projectile {
   }
 
   shatter() {
-
+    return (new Asteroid(this.location,
+                          createVector(random(-1, 1), random(-1, 1),
+                          this.size - 10)))
   }
 }

@@ -20,7 +20,7 @@ function setup() {
     asteroids = []
 
     for (var i = 0; i < 10; i++) {
-      asteroids.push(new Asteroid(createVector(random(1, 10), random(1, 10)), createVector(random(0, 1), random(0, 1))))
+      asteroids.push(new Asteroid(createVector(random(1, 10), random(1, 10)), createVector(random(0, 1), random(0, 1)), 30))
     }
   }
 

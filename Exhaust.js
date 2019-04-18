@@ -1,7 +1,7 @@
 class Exhaust {
   constructor(location, direction, color) {
-    this.location = location
-    this.velocity = direction.rotate(random(-1, 1))
+    this.location = location.copy()
+    this.velocity = direction.copy().rotate(random(-1, 1))
     this.velocity = this.velocity.mult(.5)
     this.color = color
     this.power = 255

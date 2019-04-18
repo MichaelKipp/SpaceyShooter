@@ -7,14 +7,25 @@ class Spaceship {
       this.projectiles = []
       this.exhausted = []
       this.cooldown = 0
+      this.booster = 100
+      this.boostCooldown = 0
   }
 
   update() {
-    this.velocity.limit(5)
     this.velocity.add(this.acceleration)
+    this.velocity.limit(5)
     this.location.add(this.velocity)
 
+    console.log(this.booster, this.boostCooldown)
     if (this.cooldown > 0) { this.cooldown-- }
+
+    if (this.booster <= 0 && this.boostCooldown <= 1) {
+      this.booster = 100
+    } else if (this.booster < 100 && this.boostCooldown == 0) {
+      this.booster++
+    } else if (this.boostCooldown > 0) {
+      this.boostCooldown--
+    }
 
     this.projectiles.forEach(projectile => {
       projectile.display()
@@ -30,17 +41,18 @@ class Spaceship {
     while (this.exhausted.length > 0 && this.exhausted[0].faded()) {
       this.exhausted.shift()
     }
-    for (var i = 0; i < this.projectiles.length; i++) {
-      for (var j = 0; j < asteroids.length; j++) {
+    for (var i = this.projectiles.length - 1; i >= 0; i--) {
+      for (var j = asteroids.length - 1; j >= 0; j--) {
         if (asteroids[j].impacts(this.projectiles[i].location.x, this.projectiles[i].location.y)) {
-          asteroids[j].shatter()
-          this.projectiles[i].explode()
+          if (!this.projectiles[i].exploded) {
+            this.projectiles[i].explode()
+            // asteroids.push(asteroids[j].shatter())
+            // asteroids.push(asteroids[j].shatter())
+            asteroids.splice(j, 1)
+          }
         }
       }
-      // TODO: Figure out how to remove old projectiles
-      // if (this.projectiles[i].dead) {
-      //   remove(this.projectiles[i])
-      // }
+      if (this.projectiles[i].dead) { this.projectiles.splice(i, 1) }
     }
   }
 
@@ -56,15 +68,17 @@ class Spaceship {
 
   boost(multiplier) {
     this.velocity.add(p5.Vector.mult(ship.direction, multiplier))
-    if (multiplier == .05) {
+    if (multiplier == .05 || this.boostCooldown > 0) {
       for (let i = random(3, 10); i > 0; i--) {
-        this.exhausted.push(new Exhaust(createVector(this.location.x, this.location.y),
+        this.exhausted.push(new Exhaust(this.location,
                                           createVector(-this.direction.x, -this.direction.y),
                                           color(0, random(50, 255), random(50, 255), this.power)))
       }
     } else {
+      this.booster -= 2
+      if (this.booster <= 0) {this.boostCooldown = 200}
       for (let i = random(6, 15); i > 0; i--) {
-        this.exhausted.push(new Exhaust(createVector(this.location.x, this.location.y),
+        this.exhausted.push(new Exhaust(this.location,
                                           createVector(-this.direction.x*2, -this.direction.y*2),
                                           color(random(50, 255), 0, random(50, 255), this.power)))
       }
@@ -77,7 +91,7 @@ class Spaceship {
 
   shoot() {
     if (this.cooldown == 0) {
-      this.projectiles.push(new Projectile(createVector(this.location.x, this.location.y),
+      this.projectiles.push(new Projectile(this.location,
                                             this.velocity.copy().add(this.direction.copy().mult(4))))
       this.cooldown = 30
     }

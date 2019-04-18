@@ -1,7 +1,7 @@
 class Projectile {
   constructor (location, direction) {
-    this.location = location
-    this.velocity = direction
+    this.location = location.copy()
+    this.velocity = direction.copy()
     this.color = color(random(50, 240), random(50, 240), random(50, 240))
     this.exploded = false
     this.dead = false
@@ -38,8 +38,10 @@ class Projectile {
 
   explode() {
     if (this.exploded == false) {
-      for (var i = 0; i < 20; i++) {
-        this.sparks.push(new Exhaust(this.location.copy(), createVector(random(-1, 1), random(1, -1))))
+      for (var i = 0; i < 50; i++) {
+        this.sparks.push(new Exhaust(this.location.copy(),
+                                    createVector(random(-1, 1), random(1, -1)),
+                                    color(random(50, 255), random(50, 255), random(50, 255))))
       }
       this.exploded = true
     }
