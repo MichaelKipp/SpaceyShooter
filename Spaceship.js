@@ -29,7 +29,7 @@ class Spaceship {
     if (this.location.x < 0) {
       this.location.x = width
     }
-    if (this.location.x > width) {
+    if (this.location.x > width) {3
       this.location.x = 0
     }
     if (this.location.y < 0) {
