@@ -16,7 +16,6 @@ class Spaceship {
     this.velocity.limit(5)
     this.location.add(this.velocity)
 
-    console.log(this.booster, this.boostCooldown)
     if (this.cooldown > 0) { this.cooldown-- }
 
     if (this.booster <= 0 && this.boostCooldown <= 1) {
