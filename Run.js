@@ -5,6 +5,15 @@
 
 var ship
 var asteroids
+var startX
+var startY
+var lives
+var score
+var myFont
+
+function preload() {
+  myFont = loadFont('Hyperspace.otf');
+}
 
 function setup() {
     createCanvas(windowWidth, windowHeight)
@@ -16,30 +25,102 @@ function setup() {
     angleMode(RADIANS)
     colorMode(RGB, 255)
 
-    ship = new Spaceship()
     asteroids = []
 
-    for (var i = 0; i < 10; i++) {
-      asteroids.push(new Asteroid(createVector(random(1, 10), random(1, 10)), createVector(random(0, 1), random(0, 1)), 30))
+    startX = []
+    startY = []
+
+    for (var x = 0; x < width; x++) {
+      if (x > width/2 + 100 || x < width/2 - 100) {
+        startX[x] = x
+      }
     }
+
+    for (var y = 0; y < height; y++) {
+      if (y > height/2 + 100 || y < height/2 - 100) {
+        startY[y] = y
+      }
+    }
+
+    start()
   }
 
   function draw() {
     background(0)
 
-    checkInteraction()
+    //score
 
-    ship.update()
-    ship.display()
+    if (lives <= 0) {
+      gameOver()
+    }
+
+    checkInteraction()
 
     asteroids.forEach(asteroid => {
       asteroid.update()
       asteroid.display()
     })
 
+    //lives
+    push()
+    translate(100,50)
+    textSize(40)
+    fill(255)
+    textFont(myFont)
+    text(score, -10, 0)
+    translate(0, 20)
+    fill(0)
+
+    if (lives > 0) {
+      for (var i = 0; i < lives; i++) {
+        beginShape();
+        vertex(0, 0)
+        vertex(-6, -2)
+        vertex(0, 10)
+        vertex(6, -2)
+        endShape(CLOSE)
+        translate(20, 0)
+      }
+    pop()
+    ship.update()
+    ship.display()
+  }
+}
+
+  function start() {
+    ship = new Spaceship()
+    asteroids = []
+    lives = 3
+    score = 0
+    for (var i = 0; i < 20; i++) {
+      asteroids.push(new Asteroid(createVector(random(startX), random(startY)), createVector(random(0, 1), random(0, 1)), 30))
+    }
+  }
+
+  function gameOver() {
+    push()
+    fill(255)
+    translate(width/2, height/2)
+    textAlign(CENTER, CENTER)
+    textFont(myFont)
+    textSize(100)
+    text('GAME OVER', 0, 0)
+    translate(0, 100)
+    textSize(35)
+    if (frameCount % 40 > 20) {
+      stroke(0)
+      fill(0)
+    }
+    text('PRESS <ENTER> TO START', 0, 0)
+    pop()
   }
 
   function checkInteraction() {
+    if (keyIsDown(ENTER)) {
+      if (lives <= 0) {
+          start()
+      }
+    }
     if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { ship.turnLeft() }
     if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { ship.turnRight() }
     if (keyIsDown(UP_ARROW) || keyIsDown(87)) {

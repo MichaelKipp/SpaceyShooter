@@ -6,15 +6,24 @@ class Spaceship {
       this.direction = createVector(1, 0)
       this.projectiles = []
       this.exhausted = []
+
+      this.poly = [createVector(0, 0),
+      createVector(-2, -6),
+      createVector(10, 0),
+      createVector(-2, 6),]
+
       this.cooldown = 0
       this.booster = 100
       this.boostCooldown = 0
+      this.invulnerability = 0
   }
 
   update() {
     this.velocity.add(this.acceleration)
-    this.velocity.limit(5)
+    this.velocity.limit(3)
     this.location.add(this.velocity)
+
+    if (this.invulnerability > 0) { this.invulnerability-- }
 
     if (this.cooldown > 0) { this.cooldown-- }
 
@@ -29,7 +38,7 @@ class Spaceship {
     if (this.location.x < 0) {
       this.location.x = width
     }
-    if (this.location.x > width) {3
+    if (this.location.x > width) {
       this.location.x = 0
     }
     if (this.location.y < 0) {
@@ -53,28 +62,46 @@ class Spaceship {
     while (this.exhausted.length > 0 && this.exhausted[0].faded()) {
       this.exhausted.shift()
     }
-    for (var i = this.projectiles.length - 1; i >= 0; i--) {
-      for (var j = asteroids.length - 1; j >= 0; j--) {
+    for (var j = asteroids.length - 1; j >= 0; j--) {
+      if (this.collidesWithAsteroid(asteroids[j]) && this.invulnerability == 0) {
+        this.collision()
+      }
+      for (var i = this.projectiles.length - 1; i >= 0; i--) {
         if (asteroids[j].impacts(this.projectiles[i].location.x, this.projectiles[i].location.y)) {
           if (!this.projectiles[i].exploded) {
+            score += 10
             this.projectiles[i].explode()
-            // asteroids.push(asteroids[j].shatter())
-            // asteroids.push(asteroids[j].shatter())
+            if (asteroids[j].size >= 20) {
+              for (var k = 0; k < 2; k++) {
+                asteroids.push(asteroids[j].shatter())
+              }
+            }
             asteroids.splice(j, 1)
+            break;
           }
         }
+        if (this.projectiles[i].dead) { this.projectiles.splice(i, 1) }
       }
-      if (this.projectiles[i].dead) { this.projectiles.splice(i, 1) }
     }
   }
 
   display() {
     push()
-    fill(255)
-    stroke(255)
+    if (this.invulnerability % 10 > 5) {
+      fill(0)
+      stroke(100)
+    } else {
+      fill(0)
+      stroke(255)
+    }
     translate(this.location.x, this.location.y)
     rotate(this.direction.heading())
-    triangle(6,0,-2,4,-2,-4)
+    beginShape();
+    vertex(0, 0)
+    vertex(-2, -6)
+    vertex(10, 0)
+    vertex(-2, 6)
+    endShape(CLOSE)
     pop()
   }
 
@@ -97,9 +124,29 @@ class Spaceship {
     }
   }
 
-  turnRight() { ship.direction.rotate(.15) }
+  collision() {
+    lives--
+    this.spawn(createVector(width/2, height/2))
+  }
 
-  turnLeft() { ship.direction.rotate(-.15) }
+  spawn(location) {
+    this.invulnerability = 200
+    this.location = location
+    this.velocity = createVector(0, 0)
+    for (var i = 0; i < 40; i++) {
+      this.exhausted.push(new Exhaust(this.location,
+                                      createVector(random(-5, 5), random(-5, 1)),
+                                      color(255, 255, 255)))
+    }
+  }
+
+  collidesWithAsteroid(asteroid) {
+    return dist(this.location.x, this.location.y, asteroid.location.x, asteroid.location.y) < asteroid.size + 10
+  }
+
+  turnRight() { ship.direction.rotate(.1) }
+
+  turnLeft() { ship.direction.rotate(-.1) }
 
   shoot() {
     if (this.cooldown == 0) {

@@ -6,8 +6,9 @@ class Asteroid extends Projectile {
     this.edges = random(9, 13)
     this.poly = []
     for (var i = 0; i < this.edges; i++) {
-      var angle = map(i, 0, 10, 0, TWO_PI)
-      this.poly.push(createVector(this.size * cos(angle), this.size * sin(angle)))
+      var angle = map(i, 0, this.edges, 0, TWO_PI)
+      this.poly.push(createVector(this.size * cos(angle) + random(-4, 4),
+                                  this.size * sin(angle) +  random(-4, 4)))
     }
   }
 
@@ -46,7 +47,7 @@ class Asteroid extends Projectile {
 
   shatter() {
     return (new Asteroid(this.location,
-                          createVector(random(-1, 1), random(-1, 1),
-                          this.size - 10)))
+                          createVector(random(-1, 1), random(-1, 1)),
+                          this.size - 10))
   }
 }
