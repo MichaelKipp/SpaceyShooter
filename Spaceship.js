@@ -69,8 +69,9 @@ class Spaceship {
       for (var i = this.projectiles.length - 1; i >= 0; i--) {
         if (asteroids[j].impacts(this.projectiles[i].location.x, this.projectiles[i].location.y)) {
           if (!this.projectiles[i].exploded) {
-            score += 10
+            oneUpped = false
             this.projectiles[i].explode()
+            score += asteroids[j].points
             if (asteroids[j].size >= 20) {
               for (var k = 0; k < 2; k++) {
                 asteroids.push(asteroids[j].shatter())
@@ -152,7 +153,7 @@ class Spaceship {
     if (this.cooldown == 0) {
       this.projectiles.push(new Projectile(this.location,
                                             this.velocity.copy().add(this.direction.copy().mult(4))))
-      this.cooldown = 30
+      this.cooldown = 10
     }
   }
 }

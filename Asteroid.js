@@ -3,6 +3,7 @@ class Asteroid extends Projectile {
     super(location, direction)
     // this.color = color(random(10, 240), random(10, 240), random(10, 240))
     this.size = size
+    this.points = 40 - this.size
     this.edges = random(9, 13)
     this.poly = []
     for (var i = 0; i < this.edges; i++) {
@@ -26,7 +27,7 @@ class Asteroid extends Projectile {
   }
 
   update() {
-    this.location.add(this.velocity)
+    this.location.add(this.velocity.copy().mult(1 + level/10))
     if (this.location.x + this.size < 0) {
       this.location.x = width + this.size
     }

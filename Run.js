@@ -9,6 +9,10 @@ var startX
 var startY
 var lives
 var score
+var level
+var oneUpped
+var advancing
+
 var myFont
 
 function preload() {
@@ -42,6 +46,7 @@ function setup() {
       }
     }
 
+    oneUpped = true
     start()
   }
 
@@ -49,9 +54,17 @@ function setup() {
     background(0)
 
     //score
+    if (asteroids.length == 0 && !advancing) {
+      advanceLevel()
+    }
 
     if (lives <= 0) {
       gameOver()
+    }
+
+    if (score % 10000 == 0 && !oneUpped) {
+      lives++
+      oneUpped = true
     }
 
     checkInteraction()
@@ -61,16 +74,27 @@ function setup() {
       asteroid.display()
     })
 
-    //lives
+
     push()
     translate(100,50)
     textSize(40)
     fill(255)
     textFont(myFont)
     text(score, -10, 0)
-    translate(0, 20)
-    fill(0)
+    translate(width - 100, 0)
+    pop()
 
+    push()
+    translate(width/2,50)
+    textSize(40)
+    fill(255)
+    textFont(myFont)
+    text(level, -10, 0)
+    pop()
+
+    //lives
+    push()
+    translate(100, 70)
     if (lives > 0) {
       for (var i = 0; i < lives; i++) {
         beginShape();
@@ -90,9 +114,28 @@ function setup() {
   function start() {
     ship = new Spaceship()
     asteroids = []
+    advancing = false
     lives = 3
     score = 0
-    for (var i = 0; i < 20; i++) {
+    level = 1
+    spawnAsteroids()
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+
+  async function advanceLevel() {
+    level++
+    advancing = true
+    await sleep(2000)
+    spawnAsteroids()
+    advancing = false
+  }
+
+  function spawnAsteroids() {
+    for (var i = 0; i < 5 + level/2; i++) {
       asteroids.push(new Asteroid(createVector(random(startX), random(startY)), createVector(random(0, 1), random(0, 1)), 30))
     }
   }
@@ -115,6 +158,12 @@ function setup() {
     pop()
   }
 
+  function keyPressed() {
+    if (keyCode == 32) {
+      ship.shoot()
+    }
+  }
+
   function checkInteraction() {
     if (keyIsDown(ENTER)) {
       if (lives <= 0) {
@@ -131,7 +180,7 @@ function setup() {
       }
     }
     // if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) { ship.accelerate(p5.Vector.mult(ship.direction, -.05)) }
-    if (keyIsDown(32)) { ship.shoot() }
+    // if (keyIsDown(32)) {  }
   }
 
   function windowResized() { resizeCanvas(windowWidth, windowHeight) }
