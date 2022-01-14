@@ -19,8 +19,8 @@ class Spaceship {
   }
 
   update() {
-    this.velocity.add(this.acceleration)
-    this.velocity.limit(3)
+    this.velocity.add(p5.Vector.mult(this.velocity, -.004))
+    this.velocity.limit(6)
     this.location.add(this.velocity)
 
     if (this.invulnerability > 0) { this.invulnerability-- }
@@ -69,9 +69,23 @@ class Spaceship {
       for (var i = this.projectiles.length - 1; i >= 0; i--) {
         if (asteroids[j].impacts(this.projectiles[i].location.x, this.projectiles[i].location.y)) {
           if (!this.projectiles[i].exploded) {
+            if (asteroids[j].size == 30)
+            {
+              bangLarge.play()
+              score += 20;
+            }
+              else if (asteroids[j].size == 20)
+            {
+              bangMedium.play();
+              score += 50;
+            }
+              else
+            {
+              bangSmall.play();
+              score += 100;
+            }
             oneUpped = false
             this.projectiles[i].explode()
-            score += asteroids[j].points
             if (asteroids[j].size >= 20) {
               for (var k = 0; k < 2; k++) {
                 asteroids.push(asteroids[j].shatter())
@@ -107,6 +121,7 @@ class Spaceship {
   }
 
   boost(multiplier) {
+    // thrust.play(); TODO: Uncomment once bug is patched
     this.velocity.add(p5.Vector.mult(ship.direction, multiplier))
     if (multiplier == .05 || this.boostCooldown > 0) {
       for (let i = random(3, 10); i > 0; i--) {
@@ -151,6 +166,7 @@ class Spaceship {
 
   shoot() {
     if (this.cooldown == 0) {
+      fire.play();
       this.projectiles.push(new Projectile(this.location,
                                             this.velocity.copy().add(this.direction.copy().mult(4))))
       this.cooldown = 10

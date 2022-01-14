@@ -15,8 +15,33 @@ var advancing
 
 var myFont
 
+var bangLarge
+var bangMedium
+var bangSmall
+var beat1
+var beat2
+var extraship
+var fire
+var saucerBig
+var saucerSmall
+var thrust
+
+var hasMoved
+var hasShot
+
 function preload() {
   myFont = loadFont('Hyperspace.otf');
+  soundFormats('wav');
+  bangLarge = loadSound('Sounds/bangLarge.wav');
+  bangMedium = loadSound('Sounds/bangMedium.wav');
+  bangSmall = loadSound('Sounds/bangSmall.wav');
+  beat1 = loadSound('Sounds/beat1.wav');
+  beat2 = loadSound('Sounds/beat2.wav');
+  extraship = loadSound('Sounds/extraship.wav');
+  fire = loadSound('Sounds/fire.wav');
+  saucerBig = loadSound('Sounds/saucerBig.wav');
+  saucerSmall = loadSound('Sounds/saucerSmall.wav');
+  thrust = loadSound('Sounds/thrust.wav');
 }
 
 function setup() {
@@ -63,6 +88,7 @@ function setup() {
     }
 
     if (score % 10000 == 0 && !oneUpped) {
+      extraship.play()
       lives++
       oneUpped = true
     }
@@ -108,6 +134,14 @@ function setup() {
     pop()
     ship.update()
     ship.display()
+    if (!hasMoved){
+      fill(200, .75);
+      text("W, A, D or arrow keys to move", (windowWidth * 11/20), (windowHeight/2));
+    }
+    if (!hasShot){
+      fill(200, 1);
+      text("Space to shoot", (windowWidth * 11/20), (windowHeight/2) + 20);
+    }
   }
 }
 
@@ -161,6 +195,7 @@ function setup() {
   function keyPressed() {
     if (keyCode == 32) {
       ship.shoot()
+      hasShot = true;
     }
   }
 
@@ -173,6 +208,7 @@ function setup() {
     if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { ship.turnLeft() }
     if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) { ship.turnRight() }
     if (keyIsDown(UP_ARROW) || keyIsDown(87)) {
+      hasMoved = true;
       if (keyIsDown(SHIFT)) {
         ship.boost(.2)
       } else {

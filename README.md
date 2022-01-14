@@ -1,6 +1,5 @@
 # SpaceyShooter
 
-Asteroids(ish) Replica
 https://michaelkipp.github.io/SpaceyShooter/
 
 ## Built With
@@ -8,9 +7,7 @@ https://michaelkipp.github.io/SpaceyShooter/
 * [Processing](https://processing.org/)
 * [p5.js](https://p5js.org/)
 
-## Authors
-
-* **Michael Kipp** - (https://github.com/michaelkipp)
+* Sound effects thanks to http://www.classicgaming.cc/classics/asteroids/sounds
 
 ## License
 
