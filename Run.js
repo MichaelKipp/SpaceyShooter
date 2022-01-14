@@ -37,7 +37,7 @@ function preload() {
   bangSmall = loadSound('Sounds/bangSmall.wav');
   beat1 = loadSound('Sounds/beat1.wav');
   beat2 = loadSound('Sounds/beat2.wav');
-  extraship = loadSound('Sounds/extraship.wav');
+  extraship = loadSound('Sounds/extraShip.wav');
   fire = loadSound('Sounds/fire.wav');
   saucerBig = loadSound('Sounds/saucerBig.wav');
   saucerSmall = loadSound('Sounds/saucerSmall.wav');
